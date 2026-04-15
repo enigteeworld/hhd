@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 42 23% 95%;
+    --foreground: 200 19% 21%;
+    --card: 0 0% 100%;
+    --card-foreground: 200 19% 21%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 19% 21%;
+    --primary: 42 89% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 88 43% 90%;
+    --secondary-foreground: 200 19% 21%;
+    --muted: 42 23% 92%;
+    --muted-foreground: 200 10% 46%;
+    --accent: 88 43% 90%;
+    --accent-foreground: 200 19% 21%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 42 20% 88%;
+    --input: 42 20% 88%;
+    --ring: 42 89% 59%;
+    --radius: 0.625rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-nursery-cream text-nursery-slate font-inter antialiased;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-nunito font-bold;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply w-full px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+  
+  .card-rounded {
+    @apply rounded-[2rem] overflow-hidden;
+  }
+  
+  .card-shadow {
+    box-shadow: 0 18px 40px rgba(43, 58, 66, 0.10);
+  }
+  
+  .card-shadow-lg {
+    box-shadow: 0 24px 60px rgba(43, 58, 66, 0.14);
+  }
+  
+  .btn-primary {
+    @apply bg-nursery-tangerine text-white font-semibold px-8 py-4 rounded-full 
+           transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02]
+           hover:shadow-lg active:scale-[0.98];
+  }
+  
+  .btn-outline {
+    @apply border-2 border-nursery-slate text-nursery-slate font-semibold px-8 py-4 rounded-full
+           transition-all duration-300 hover:bg-nursery-slate hover:text-white;
+  }
+  
+  .icon-circle {
+    @apply w-12 h-12 rounded-full bg-nursery-tangerine flex items-center justify-center text-white;
+  }
+  
+  .label-uppercase {
+    @apply text-xs font-semibold tracking-[0.12em] uppercase text-nursery-tangerine;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-nursery-tangerine to-nursery-coral bg-clip-text text-transparent;
+  }
+  
+  .hill-shape {
+    @apply absolute bottom-0 w-full;
+  }
+  
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md rounded-[2rem];
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animate-in {
+    animation: animateIn 0.6s ease-out forwards;
+  }
+  
+  @keyframes animateIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .slide-in-left {
+    animation: slideInLeft 0.7s ease-out forwards;
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .slide-in-right {
+    animation: slideInRight 0.7s ease-out forwards;
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .scale-in {
+    animation: scaleIn 0.6s ease-out forwards;
+  }
+  
+  .float-soft {
+    animation: floatSoft 5.5s ease-in-out infinite;
+  }
+
+  @keyframes floatSoft {
+    0%, 100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -10px, 0);
+    }
+  }
+
+  .drift-soft {
+    animation: driftSoft 8s ease-in-out infinite;
+  }
+
+  @keyframes driftSoft {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate3d(0, -8px, 0) rotate(0.8deg);
+    }
+  }
+
+  .soft-rise {
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+
+  .soft-rise:hover {
+    transform: translateY(-6px);
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F6F4EF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B6D7A8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8FBC8F;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(244, 178, 58, 0.3);
+  color: #2B3A42;
+}
