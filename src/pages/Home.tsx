@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Clock, Users, Baby, 
+import {
+  Clock, Users, Baby,
   Palette, Music, BookOpen,
   Utensils, Moon, Heart,
   Sun, TreePine, Bike,
@@ -17,7 +17,6 @@ const Home = () => {
   const featuresRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Intersection Observer for scroll animations
     const observerOptions = {
       root: null,
       rootMargin: '0px',
@@ -33,7 +32,6 @@ const Home = () => {
       });
     }, observerOptions);
 
-    // Observe all elements with animation classes
     document.querySelectorAll('.scroll-animate').forEach((el) => {
       observer.observe(el);
     });
@@ -150,14 +148,23 @@ const Home = () => {
               <span className="label-uppercase mb-4 block scroll-animate opacity-0">
                 Happy Hearts Daycare
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-nursery-slate leading-tight mb-6 scroll-animate opacity-0" style={{ animationDelay: '100ms' }}>
+              <h1
+                className="text-4xl md:text-5xl lg:text-6xl font-bold text-nursery-slate leading-tight mb-6 scroll-animate opacity-0"
+                style={{ animationDelay: '100ms' }}
+              >
                 Nurturing curiosity.<br />
                 <span className="text-nursery-tangerine">Building bright futures.</span>
               </h1>
-              <p className="text-lg text-nursery-slate-muted mb-8 max-w-lg scroll-animate opacity-0" style={{ animationDelay: '200ms' }}>
+              <p
+                className="text-lg text-nursery-slate-muted mb-8 max-w-lg scroll-animate opacity-0"
+                style={{ animationDelay: '200ms' }}
+              >
                 A warm, secure place where early learning feels like play. We provide exceptional care for children aged 6 months to 5 years.
               </p>
-              <div className="flex flex-wrap gap-4 scroll-animate opacity-0" style={{ animationDelay: '300ms' }}>
+              <div
+                className="flex flex-wrap gap-4 scroll-animate opacity-0"
+                style={{ animationDelay: '300ms' }}
+              >
                 <Link to="/contact" className="btn-primary">
                   Book a Tour
                 </Link>
@@ -167,7 +174,10 @@ const Home = () => {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mt-12 scroll-animate opacity-0" style={{ animationDelay: '400ms' }}>
+              <div
+                className="grid grid-cols-3 gap-4 mt-12 scroll-animate opacity-0"
+                style={{ animationDelay: '400ms' }}
+              >
                 {stats.map((stat, index) => (
                   <div
                     key={index}
@@ -181,7 +191,10 @@ const Home = () => {
             </div>
 
             {/* Right Image */}
-            <div className="order-1 lg:order-2 scroll-animate opacity-0" style={{ animationDelay: '200ms' }}>
+            <div
+              className="order-1 lg:order-2 scroll-animate opacity-0"
+              style={{ animationDelay: '200ms' }}
+            >
               <ImageShowcase
                 src="/hero-child.jpg"
                 alt="Happy child at daycare"
@@ -335,7 +348,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Team Section */}
+     
+{/* Team Section */}
       <section className="relative py-24 overflow-hidden bg-nursery-mint/30">
         <div className="section-container">
           <div className="text-center max-w-2xl mx-auto mb-16 scroll-animate opacity-0">
@@ -348,7 +362,34 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="sm:hidden -mx-1 overflow-x-auto px-1 pb-4 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex gap-4 pr-6">
+              {[
+                { name: 'Emma Thompson', role: 'Nursery Director', image: '/team-director.jpg' },
+                { name: 'Sophie Williams', role: 'Lead Teacher', image: '/team-teacher1.jpg' },
+                { name: 'James Anderson', role: 'Early Years Educator', image: '/team-teacher2.jpg' },
+                { name: 'Margaret Chen', role: 'Nursery Nurse', image: '/team-nurse.jpg' },
+              ].map((member, index) => (
+                <div
+                  key={index}
+                  className="w-[82%] flex-shrink-0 snap-start bg-white rounded-[2rem] p-6 shadow-soft hover:shadow-soft-lg transition-all duration-300 scroll-animate opacity-0"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="relative mb-4">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full aspect-square object-cover rounded-2xl"
+                    />
+                  </div>
+                  <h4 className="font-bold text-nursery-slate text-lg">{member.name}</h4>
+                  <p className="text-nursery-tangerine text-sm">{member.role}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { name: 'Emma Thompson', role: 'Nursery Director', image: '/team-director.jpg' },
               { name: 'Sophie Williams', role: 'Lead Teacher', image: '/team-teacher1.jpg' },

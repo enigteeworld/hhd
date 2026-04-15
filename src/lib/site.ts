@@ -7,4 +7,10 @@ export const SITE = {
   whatsappNumber: '447449529831',
   addressLines: ['173 Ashley Lane', 'Manchester, M9 4NQ'],
   whatsappMessage: 'Hi, I would like to know more about Happy Hearts Daycare.',
+  openingHours: 'Mon - Fri: 7:30 AM - 6:00 PM',
+};
+
+export const getWhatsAppHref = () => {
+  const message = encodeURIComponent(SITE.whatsappMessage);
+  return `https://wa.me/${SITE.whatsappNumber}?text=${message}`;
 };

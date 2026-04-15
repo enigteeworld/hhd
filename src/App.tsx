@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 
 // Pages
@@ -13,10 +13,14 @@ import AdminDashboard from './pages/AdminDashboard';
 import WhatsAppFloat from './components/WhatsAppFloat';
 import Preloader from './components/Preloader';
 
-function App() {
+function AppShell() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
-    <Router>
-      <Preloader />
+    <>
+      {!isAdminRoute && <Preloader />}
+
       <div className="min-h-screen bg-nursery-cream page-fade-in">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -26,8 +30,17 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
-        <WhatsAppFloat />
+
+        {!isAdminRoute && <WhatsAppFloat />}
       </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppShell />
     </Router>
   );
 }
