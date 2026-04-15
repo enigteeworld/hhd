@@ -18,9 +18,9 @@ type ImageShowcaseProps = {
 };
 
 const positionMap = {
-  'top-right': 'right-4 top-4 sm:right-6 sm:top-6',
-  'bottom-right': 'bottom-4 right-4 sm:bottom-6 sm:right-6',
-  'bottom-left': 'bottom-4 left-4 sm:bottom-6 sm:left-6',
+  'top-right': 'right-3 top-3 sm:right-6 sm:top-6',
+  'bottom-right': 'bottom-3 right-3 sm:bottom-6 sm:right-6',
+  'bottom-left': 'bottom-3 left-3 sm:bottom-6 sm:left-6',
 };
 
 const tiltMap = {
@@ -40,7 +40,7 @@ const ImageShowcase = ({
   const badgePosition = positionMap[badge?.position ?? 'bottom-right'];
 
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn('relative overflow-visible', className)}>
       <div className="absolute inset-6 -z-10 rounded-[2.8rem] bg-white/70 blur-2xl" />
 
       <div
@@ -63,15 +63,26 @@ const ImageShowcase = ({
       {badge ? (
         <div
           className={cn(
-            'absolute z-20 rounded-full bg-nursery-tangerine px-4 py-2 shadow-soft-lg animate-float',
+            'absolute z-20 max-w-[calc(100%-1.5rem)] sm:max-w-[300px] rounded-[1.25rem] bg-nursery-tangerine px-3 py-2.5 shadow-soft-lg animate-float sm:px-4',
             badgePosition,
           )}
         >
-          <div className="flex items-center gap-2">
-            <Star className="h-4 w-4 fill-white text-white" />
-            <p className="whitespace-nowrap text-sm font-semibold text-white">
-              {badge.eyebrow ? `${badge.eyebrow} • ${badge.text}` : badge.text}
-            </p>
+          <div className="flex items-start gap-2.5">
+            <div className="mt-0.5 shrink-0">
+              <Star className="h-4 w-4 fill-white text-white" />
+            </div>
+
+            <div className="min-w-0">
+              {badge.eyebrow ? (
+                <p className="truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-white/85 sm:text-[11px]">
+                  {badge.eyebrow}
+                </p>
+              ) : null}
+
+              <p className="text-sm font-semibold leading-snug text-white break-words sm:text-[15px]">
+                {badge.text}
+              </p>
+            </div>
           </div>
         </div>
       ) : null}
