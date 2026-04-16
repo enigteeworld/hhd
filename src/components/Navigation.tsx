@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 import { SITE } from '@/lib/site';
+import useCmsContent from '@/hooks/useCmsContent';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { getSetting, getImage } = useCmsContent();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +37,15 @@ const Navigation = () => {
     { path: '/contact', label: 'Contact' },
   ];
 
+  const siteName = getSetting('site_name', SITE.name);
+  const phoneDisplay = getSetting('phone', SITE.phoneDisplay);
+  const logoImage = getImage('site_logo', '/logo-cropped.png', siteName);
+
+  const phoneHref = useMemo(() => {
+    const digits = phoneDisplay.replace(/[^\d+]/g, '');
+    return `tel:${digits}`;
+  }, [phoneDisplay]);
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -46,10 +57,10 @@ const Navigation = () => {
           }`}
         >
           <div className="flex items-center justify-between gap-4">
-            <Link to="/" className="flex min-w-0 items-center gap-3 group" aria-label={SITE.name}>
+            <Link to="/" className="flex min-w-0 items-center gap-3 group" aria-label={siteName}>
               <img
-                src="/logo-cropped.png"
-                alt={SITE.name}
+                src={logoImage.src}
+                alt={siteName}
                 className="h-14 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-16"
               />
             </Link>
@@ -77,12 +88,13 @@ const Navigation = () => {
 
             <div className="hidden lg:flex items-center gap-4">
               <a
-                href={SITE.phoneHref}
+                href={phoneHref}
                 className="flex items-center gap-2 rounded-full bg-nursery-cream px-4 py-2 text-sm font-semibold text-nursery-slate transition-all duration-300 hover:-translate-y-0.5 hover:text-nursery-tangerine"
               >
                 <Phone className="h-4 w-4" />
-                <span>{SITE.phoneDisplay}</span>
+                <span>{phoneDisplay}</span>
               </a>
+
               <Link to="/contact" className="btn-primary text-sm py-3 px-6 shadow-soft">
                 Book a Tour
               </Link>
@@ -117,7 +129,11 @@ const Navigation = () => {
         >
           <div className="border-b border-nursery-mint/80 px-5 py-4">
             <div className="flex items-center justify-between gap-4">
-              <img src="/logo-cropped.png" alt={SITE.name} className="h-12 w-auto object-contain" />
+              <img
+                src={logoImage.src}
+                alt={siteName}
+                className="h-12 w-auto object-contain"
+              />
               <div className="rounded-full bg-[#f5d9b8]/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#d18c53]">
                 Explore
               </div>
@@ -143,11 +159,11 @@ const Navigation = () => {
             </div>
 
             <a
-              href={SITE.phoneHref}
+              href={phoneHref}
               className="mt-4 flex items-center justify-center gap-2 text-sm font-semibold text-nursery-slate transition-colors duration-300 hover:text-nursery-tangerine"
             >
               <Phone className="h-4 w-4" />
-              <span>{SITE.phoneDisplay}</span>
+              <span>{phoneDisplay}</span>
             </a>
           </div>
         </div>

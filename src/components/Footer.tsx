@@ -1,9 +1,35 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, Facebook, Instagram } from 'lucide-react';
 import { SITE } from '@/lib/site';
+import useCmsContent from '@/hooks/useCmsContent';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { getSetting } = useCmsContent();
+
+  const siteName = getSetting('site_name', SITE.name);
+  const email = getSetting('email', SITE.email);
+  const phoneDisplay = getSetting('phone', SITE.phoneDisplay);
+  const address = getSetting('address', SITE.addressLines.join(', '));
+  const footerText = getSetting(
+    'footer_text',
+    'EYFS nursery for children aged 0-5 years.',
+  );
+
+  const addressLines = useMemo(() => {
+    const parts = address
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    return parts.length ? parts : SITE.addressLines;
+  }, [address]);
+
+  const phoneHref = useMemo(() => {
+    const digits = phoneDisplay.replace(/[^\d+]/g, '');
+    return `tel:${digits}`;
+  }, [phoneDisplay]);
 
   const exploreLinks = [
     { path: '/', label: 'Home' },
@@ -15,6 +41,7 @@ const Footer = () => {
   return (
     <footer className="relative overflow-hidden bg-[#114b44] px-0 pb-8 pt-16 text-white">
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#1a5c53] to-transparent opacity-80" />
+
       <div className="section-container relative z-10">
         <div className="mx-auto max-w-5xl">
           <div className="rounded-[2.4rem] bg-[#155448] px-7 py-10 text-center shadow-soft-lg sm:px-10">
@@ -22,7 +49,8 @@ const Footer = () => {
               Come and say hello!
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/82">
-              Book a personal tour to see our nursery in action and experience the warm, welcoming atmosphere for yourself.
+              Book a personal tour to see our nursery in action and experience the warm,
+              welcoming atmosphere for yourself.
             </p>
             <Link
               to="/contact"
@@ -35,9 +63,13 @@ const Footer = () => {
           <div className="mt-12 grid gap-12 lg:grid-cols-[1.1fr_0.9fr_1fr]">
             <div className="text-center lg:text-left">
               <Link to="/" className="inline-flex items-center justify-center lg:justify-start">
-                <img src="/logo-white.png" alt={SITE.name} className="h-24 w-auto object-contain" />
+                <img
+                  src="/logo-white.png"
+                  alt={siteName}
+                  className="h-24 w-auto object-contain"
+                />
               </Link>
-              <p className="mt-4 text-lg text-white/82">EYFS nursery for children aged 0-5 years.</p>
+              <p className="mt-4 text-lg text-white/82">{footerText}</p>
 
               <div className="mt-8 flex justify-center gap-4 lg:justify-start">
                 <a
@@ -66,7 +98,10 @@ const Footer = () => {
               <ul className="mt-6 space-y-4 text-lg text-white/82">
                 {exploreLinks.map((link) => (
                   <li key={link.path}>
-                    <Link to={link.path} className="transition-colors duration-300 hover:text-white">
+                    <Link
+                      to={link.path}
+                      className="transition-colors duration-300 hover:text-white"
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -76,28 +111,31 @@ const Footer = () => {
 
             <div className="text-center lg:text-left">
               <h4 className="font-nunito text-3xl font-bold text-white">Contact</h4>
+
               <div className="mt-6 space-y-5 text-lg text-white/82">
                 <div className="flex items-start justify-center gap-3 lg:justify-start">
                   <MapPin className="mt-1 h-5 w-5 shrink-0 text-[#f5a36c]" />
                   <div>
-                    {SITE.addressLines.map((line) => (
+                    {addressLines.map((line) => (
                       <p key={line}>{line}</p>
                     ))}
                   </div>
                 </div>
+
                 <a
-                  href={`mailto:${SITE.email}`}
+                  href={`mailto:${email}`}
                   className="flex items-center justify-center gap-3 break-all transition-colors duration-300 hover:text-white lg:justify-start"
                 >
                   <Mail className="h-5 w-5 shrink-0 text-[#f5a36c]" />
-                  <span>{SITE.email}</span>
+                  <span>{email}</span>
                 </a>
+
                 <a
-                  href={SITE.phoneHref}
+                  href={phoneHref}
                   className="flex items-center justify-center gap-3 transition-colors duration-300 hover:text-white lg:justify-start"
                 >
                   <Phone className="h-5 w-5 shrink-0 text-[#f5a36c]" />
-                  <span>{SITE.phoneDisplay}</span>
+                  <span>{phoneDisplay}</span>
                 </a>
               </div>
             </div>
@@ -105,7 +143,10 @@ const Footer = () => {
 
           <div className="mt-12 border-t border-white/10 pt-8">
             <div className="flex flex-col items-center justify-between gap-4 text-center text-base text-white/72 md:flex-row md:text-left">
-              <p>&copy; {currentYear} {SITE.name}. All rights reserved.</p>
+              <p>
+                &copy; {currentYear} {siteName}. All rights reserved.
+              </p>
+
               <div className="flex items-center gap-6">
                 <Link to="/privacy" className="transition-colors duration-300 hover:text-white">
                   Privacy Policy

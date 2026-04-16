@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MapPin, Mail, Phone, Clock, Send, CheckCircle2 } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -14,8 +14,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SITE } from '@/lib/site';
+import useCmsContent from '@/hooks/useCmsContent';
 
 const Contact = () => {
+  const { getSetting } = useCmsContent();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -27,7 +29,7 @@ const Contact = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -44,11 +46,30 @@ const Contact = () => {
     return () => observer.disconnect();
   }, []);
 
+  const siteName = getSetting('site_name', SITE.name);
+  const email = getSetting('email', SITE.email);
+  const phoneDisplay = getSetting('phone', SITE.phoneDisplay);
+  const address = getSetting('address', SITE.addressLines.join(', '));
+  const openingHours = getSetting('opening_hours', SITE.openingHours);
+
+  const addressLines = useMemo(() => {
+    const parts = address
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    return parts.length ? parts : SITE.addressLines;
+  }, [address]);
+
+  const phoneHref = useMemo(() => {
+    const digits = phoneDisplay.replace(/[^\d+]/g, '');
+    return `tel:${digits}`;
+  }, [phoneDisplay]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
     setIsSubmitted(true);
-    // Reset form after 3 seconds
+
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({
@@ -72,24 +93,24 @@ const Contact = () => {
     {
       icon: MapPin,
       title: 'Visit Us',
-      details: SITE.addressLines,
+      details: addressLines,
     },
     {
       icon: Mail,
       title: 'Email Us',
-      details: [SITE.email],
-      link: `mailto:${SITE.email}`,
+      details: [email],
+      link: `mailto:${email}`,
     },
     {
       icon: Phone,
       title: 'Call Us',
-      details: [SITE.phoneDisplay],
-      link: SITE.phoneHref,
+      details: [phoneDisplay],
+      link: phoneHref,
     },
     {
       icon: Clock,
       title: 'Opening Hours',
-      details: ['Mon - Fri: 7:30 AM - 6:00 PM', 'Sat - Sun: Closed'],
+      details: [openingHours, 'Sat - Sun: Closed'],
     },
   ];
 
@@ -97,35 +118,33 @@ const Contact = () => {
     <div className="min-h-screen bg-nursery-cream">
       <Navigation />
 
-      {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        {/* Background decoration */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-nursery-mint/30 rounded-l-[100px] -z-10" />
-        
+
         <div className="section-container">
           <div className="text-center max-w-3xl mx-auto scroll-animate opacity-0">
             <span className="label-uppercase mb-4 block">Get In Touch</span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-nursery-slate leading-tight mb-6">
-              Ready to join?<br />
+              Ready to join?
+              <br />
               <span className="text-nursery-tangerine">Let's talk.</span>
             </h1>
             <p className="text-lg text-nursery-slate-muted">
-              Tell us a little about your family and we'll get back within 1 business day to arrange a visit.
+              Tell us a little about your family and we'll get back within 1 business day
+              to arrange a visit.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
       <section className="py-20">
         <div className="section-container">
           <div className="grid lg:grid-cols-5 gap-12">
-            {/* Contact Info */}
             <div className="lg:col-span-2 scroll-animate opacity-0">
               <h2 className="text-2xl font-bold text-nursery-slate mb-8">
                 Contact Information
               </h2>
-              
+
               <div className="space-y-6">
                 {contactInfo.map((item, index) => (
                   <div key={index} className="flex items-start gap-4">
@@ -134,7 +153,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-nursery-slate mb-1">{item.title}</h4>
-                      {item.details.map((detail, dIndex) => (
+                      {item.details.map((detail, dIndex) =>
                         item.link ? (
                           <a
                             key={dIndex}
@@ -147,14 +166,13 @@ const Contact = () => {
                           <p key={dIndex} className="text-nursery-slate-muted text-sm">
                             {detail}
                           </p>
-                        )
-                      ))}
+                        ),
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Quick Info Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
                 {[
                   { label: 'Free Tour', desc: 'No obligation' },
@@ -172,7 +190,6 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Contact Form */}
             <div className="lg:col-span-3 scroll-animate opacity-0">
               <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-soft">
                 {isSubmitted ? (
@@ -184,7 +201,8 @@ const Contact = () => {
                       Thank You!
                     </h3>
                     <p className="text-nursery-slate-muted">
-                      We've received your message and will get back to you within 1 business day.
+                      We've received your message and will get back to you within 1 business
+                      day.
                     </p>
                   </div>
                 ) : (
@@ -240,7 +258,7 @@ const Contact = () => {
                             type="tel"
                             value={formData.phone}
                             onChange={handleChange}
-                            placeholder={SITE.phoneDisplay}
+                            placeholder={phoneDisplay}
                             className="rounded-xl border-nursery-mint focus:border-nursery-tangerine focus:ring-nursery-tangerine"
                           />
                         </div>
@@ -281,16 +299,14 @@ const Contact = () => {
                         />
                       </div>
 
-                      <Button
-                        type="submit"
-                        className="w-full btn-primary border-0"
-                      >
+                      <Button type="submit" className="w-full btn-primary border-0">
                         <Send className="w-5 h-5 mr-2" />
                         Send Inquiry
                       </Button>
 
                       <p className="text-xs text-nursery-slate-muted text-center">
-                        By submitting this form, you agree to our privacy policy. We'll only use your information to respond to your inquiry.
+                        By submitting this form, you agree to our privacy policy. We'll
+                        only use your information to respond to your inquiry.
                       </p>
                     </form>
                   </>
@@ -301,7 +317,6 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Map Section */}
       <section className="py-20 bg-nursery-mint/30">
         <div className="section-container">
           <div className="text-center max-w-2xl mx-auto mb-12 scroll-animate opacity-0">
@@ -310,7 +325,8 @@ const Contact = () => {
               Come and Say <span className="text-nursery-tangerine">Hello!</span>
             </h2>
             <p className="text-nursery-slate-muted">
-              We're conveniently located in Manchester with easy access and parking available.
+              We're conveniently located in Manchester with easy access and parking
+              available.
             </p>
           </div>
 
@@ -323,13 +339,12 @@ const Contact = () => {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Happy Hearts Daycare Location"
+              title={`${siteName} Location`}
             />
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20">
         <div className="section-container">
           <div className="bg-nursery-tangerine rounded-[2rem] p-12 text-center scroll-animate opacity-0">
@@ -337,14 +352,14 @@ const Contact = () => {
               Prefer to Call?
             </h2>
             <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-              Speak directly with our friendly team. We're available Monday to Friday, 7:30 AM to 6:00 PM.
+              Speak directly with our friendly team. We're available Monday to Friday.
             </p>
             <a
-              href={SITE.phoneHref}
+              href={phoneHref}
               className="inline-block bg-white text-nursery-tangerine font-bold px-8 py-4 rounded-full hover:bg-nursery-cream transition-colors"
             >
               <Phone className="w-5 h-5 inline mr-2" />
-              {SITE.phoneDisplay}
+              {phoneDisplay}
             </a>
           </div>
         </div>

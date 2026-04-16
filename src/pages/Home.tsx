@@ -1,20 +1,31 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Clock, Users, Baby,
-  Palette, Music, BookOpen,
-  Utensils, Moon, Heart,
-  Sun, TreePine, Bike,
-  Star, Quote
+  Clock,
+  Users,
+  Baby,
+  Palette,
+  Music,
+  BookOpen,
+  Utensils,
+  Moon,
+  Heart,
+  Sun,
+  TreePine,
+  Bike,
+  Star,
+  Quote,
 } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { SITE } from '@/lib/site';
 import ImageShowcase from '@/components/ImageShowcase';
+import useCmsContent from '@/hooks/useCmsContent';
 
 const Home = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
+  const { testimonials: cmsTestimonials, getSetting, getImage } = useCmsContent();
 
   useEffect(() => {
     const observerOptions = {
@@ -39,9 +50,85 @@ const Home = () => {
     return () => observer.disconnect();
   }, []);
 
+  const siteName = getSetting('site_name', SITE.name);
+  const openingHours = getSetting('opening_hours', SITE.openingHours);
+  const phoneHref = SITE.phoneHref;
+
+  const heroTitle = getSetting(
+    'hero_title',
+    'Nurturing curiosity. Building bright futures.',
+  );
+  const heroSubtitle = getSetting(
+    'hero_subtitle',
+    'A warm, secure place where early learning feels like play. We provide exceptional care for children aged 6 months to 5 years.',
+  );
+
+  const heroImage = getImage(
+    'home_hero_image',
+    '/hero-child.jpg',
+    'Happy child at daycare',
+  );
+  const learningImage = getImage(
+    'home_learning_image',
+    '/activity-painting.jpg',
+    'Child painting',
+  );
+  const nutritionImage = getImage(
+    'home_nutrition_image',
+    '/mealtime-child.jpg',
+    'Child enjoying healthy meal',
+  );
+  const outdoorImage = getImage(
+    'home_outdoor_image',
+    '/outdoor-exploration.jpg',
+    'Child exploring nature',
+  );
+
+  const teamMembers = [
+    {
+      name: 'Emma Thompson',
+      role: 'Nursery Director',
+      image: getImage('team_member_1', '/team-director.jpg', 'Emma Thompson').src,
+    },
+    {
+      name: 'Sophie Williams',
+      role: 'Lead Teacher',
+      image: getImage('team_member_2', '/team-teacher1.jpg', 'Sophie Williams').src,
+    },
+    {
+      name: 'James Anderson',
+      role: 'Early Years Educator',
+      image: getImage('team_member_3', '/team-teacher2.jpg', 'James Anderson').src,
+    },
+    {
+      name: 'Margaret Chen',
+      role: 'Nursery Nurse',
+      image: getImage('team_member_4', '/team-nurse.jpg', 'Margaret Chen').src,
+    },
+  ];
+
+  const titleParts = useMemo(() => {
+    const parts = heroTitle.split('. ').filter(Boolean);
+
+    if (parts.length <= 1) {
+      return {
+        first: heroTitle,
+        second: '',
+      };
+    }
+
+    const first = `${parts[0].replace(/\.$/, '')}.`;
+    const second = parts
+      .slice(1)
+      .join('. ')
+      .replace(/\.$/, '');
+
+    return { first, second };
+  }, [heroTitle]);
+
   const stats = [
     { icon: Baby, label: 'Ages 6 months – 5 years' },
-    { icon: Clock, label: 'Open 7:30 AM – 6:00 PM' },
+    { icon: Clock, label: openingHours },
     { icon: Users, label: 'Small group sizes' },
   ];
 
@@ -49,7 +136,8 @@ const Home = () => {
     {
       icon: Palette,
       title: 'Sensory & Messy Play',
-      description: 'Hands-on exploration that sparks creativity and cognitive development.',
+      description:
+        'Hands-on exploration that sparks creativity and cognitive development.',
     },
     {
       icon: Music,
@@ -71,27 +159,43 @@ const Home = () => {
 
   const outdoorFeatures = [
     { icon: Sun, title: 'Daily Outdoor Time', desc: 'Fresh air and sunshine every day' },
-    { icon: TreePine, title: 'Nature Exploration', desc: 'Gardening and wildlife discovery' },
+    {
+      icon: TreePine,
+      title: 'Nature Exploration',
+      desc: 'Gardening and wildlife discovery',
+    },
     { icon: Bike, title: 'Physical Play', desc: 'Bikes, climbing, and active games' },
   ];
 
-  const testimonials = [
+  const fallbackTestimonials = [
     {
-      quote: "The team made settling in so gentle—our daughter runs in smiling every morning. We couldn't be happier with the care she receives.",
+      quote:
+        "The team made settling in so gentle—our daughter runs in smiling every morning. We couldn't be happier with the care she receives.",
       author: 'Sarah & James Mitchell',
       rating: 5,
     },
     {
-      quote: "Communication is brilliant. We get daily updates and photos that really matter. It feels like we're part of their day.",
+      quote:
+        "Communication is brilliant. We get daily updates and photos that really matter. It feels like we're part of their day.",
       author: 'Amina Khan',
       rating: 5,
     },
     {
-      quote: "It feels like a second home—caring, organized, and genuinely fun. Our son has learned so much since joining.",
+      quote:
+        'It feels like a second home—caring, organized, and genuinely fun. Our son has learned so much since joining.',
       author: 'David Richardson',
       rating: 5,
     },
   ];
+
+  const testimonials =
+    cmsTestimonials.length > 0
+      ? cmsTestimonials.map((item) => ({
+          quote: item.quote,
+          author: item.author,
+          rating: item.rating,
+        }))
+      : fallbackTestimonials;
 
   return (
     <div className="min-h-screen bg-nursery-cream">
@@ -142,24 +246,29 @@ const Home = () => {
         <div className="absolute right-[15%] top-28 h-24 w-24 rounded-full bg-nursery-tangerine opacity-90 animate-pulse-soft float-soft md:h-32 md:w-32" />
 
         <div className="section-container relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+          <div className="grid min-h-[80vh] items-center gap-12 lg:grid-cols-2">
             {/* Left Content */}
             <div className="order-2 lg:order-1">
               <span className="label-uppercase mb-4 block scroll-animate opacity-0">
-                Happy Hearts Daycare
+                {siteName}
               </span>
               <h1
                 className="text-4xl md:text-5xl lg:text-6xl font-bold text-nursery-slate leading-tight mb-6 scroll-animate opacity-0"
                 style={{ animationDelay: '100ms' }}
               >
-                Nurturing curiosity.<br />
-                <span className="text-nursery-tangerine">Building bright futures.</span>
+                {titleParts.first}
+                {titleParts.second ? (
+                  <>
+                    <br />
+                    <span className="text-nursery-tangerine">{titleParts.second}</span>
+                  </>
+                ) : null}
               </h1>
               <p
                 className="text-lg text-nursery-slate-muted mb-8 max-w-lg scroll-animate opacity-0"
                 style={{ animationDelay: '200ms' }}
               >
-                A warm, secure place where early learning feels like play. We provide exceptional care for children aged 6 months to 5 years.
+                {heroSubtitle}
               </p>
               <div
                 className="flex flex-wrap gap-4 scroll-animate opacity-0"
@@ -196,10 +305,15 @@ const Home = () => {
               style={{ animationDelay: '200ms' }}
             >
               <ImageShowcase
-                src="/hero-child.jpg"
-                alt="Happy child at daycare"
+                src={heroImage.src}
+                alt={heroImage.alt}
                 tilt="right"
-                badge={{ emoji: '⭐', eyebrow: '5.0 Rating', text: 'From 50+ parents', position: 'bottom-left' }}
+                badge={{
+                  emoji: '⭐',
+                  eyebrow: '5.0 Rating',
+                  text: 'From 50+ parents',
+                  position: 'bottom-left',
+                }}
               />
             </div>
           </div>
@@ -213,10 +327,15 @@ const Home = () => {
             {/* Image */}
             <div className="scroll-animate opacity-0">
               <ImageShowcase
-                src="/activity-painting.jpg"
-                alt="Child painting"
+                src={learningImage.src}
+                alt={learningImage.alt}
                 tilt="left"
-                badge={{ emoji: '🎨', eyebrow: 'Creative play', text: 'Messy play every single day', position: 'top-right' }}
+                badge={{
+                  emoji: '🎨',
+                  eyebrow: 'Creative play',
+                  text: 'Messy play every single day',
+                  position: 'top-right',
+                }}
               />
             </div>
 
@@ -227,7 +346,8 @@ const Home = () => {
                 Hands-on activities that <span className="text-nursery-tangerine">spark joy.</span>
               </h2>
               <p className="text-nursery-slate-muted mb-8 text-lg">
-                We follow a child-led approach with plenty of sensory play, art, music, and movement—so every day feels like an adventure.
+                We follow a child-led approach with plenty of sensory play, art, music,
+                and movement—so every day feels like an adventure.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -260,11 +380,13 @@ const Home = () => {
             <div className="order-2 lg:order-1 scroll-animate opacity-0">
               <span className="label-uppercase mb-4 block">Care & Nutrition</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-nursery-slate mb-6">
-                A cozy routine.<br />
+                A cozy routine.
+                <br />
                 <span className="text-nursery-tangerine">Happy kids.</span>
               </h2>
               <p className="text-nursery-slate-muted mb-8 text-lg">
-                From settling-in moments to mealtimes and rest, we create a calm rhythm that helps children feel secure and loved.
+                From settling-in moments to mealtimes and rest, we create a calm
+                rhythm that helps children feel secure and loved.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -276,7 +398,9 @@ const Home = () => {
                     <div className="icon-circle mb-3">
                       <feature.icon className="w-5 h-5" />
                     </div>
-                    <h4 className="font-bold text-nursery-slate text-sm mb-1">{feature.title}</h4>
+                    <h4 className="font-bold text-nursery-slate text-sm mb-1">
+                      {feature.title}
+                    </h4>
                     <p className="text-xs text-nursery-slate-muted">{feature.desc}</p>
                   </div>
                 ))}
@@ -290,10 +414,15 @@ const Home = () => {
             {/* Image */}
             <div className="order-1 lg:order-2 scroll-animate opacity-0">
               <ImageShowcase
-                src="/mealtime-child.jpg"
-                alt="Child enjoying healthy meal"
+                src={nutritionImage.src}
+                alt={nutritionImage.alt}
                 tilt="right"
-                badge={{ emoji: '🍽️', eyebrow: 'Fresh meals', text: 'Prepared daily with little ones in mind', position: 'bottom-right' }}
+                badge={{
+                  emoji: '🍽️',
+                  eyebrow: 'Fresh meals',
+                  text: 'Prepared daily with little ones in mind',
+                  position: 'bottom-right',
+                }}
               />
             </div>
           </div>
@@ -307,10 +436,15 @@ const Home = () => {
             {/* Image */}
             <div className="scroll-animate opacity-0">
               <ImageShowcase
-                src="/outdoor-exploration.jpg"
-                alt="Child exploring nature"
+                src={outdoorImage.src}
+                alt={outdoorImage.alt}
                 tilt="left"
-                badge={{ emoji: '🌿', eyebrow: 'Outdoor time', text: 'Fresh air and big discoveries', position: 'top-right' }}
+                badge={{
+                  emoji: '🌿',
+                  eyebrow: 'Outdoor time',
+                  text: 'Fresh air and big discoveries',
+                  position: 'top-right',
+                }}
               />
             </div>
 
@@ -318,11 +452,13 @@ const Home = () => {
             <div className="scroll-animate opacity-0">
               <span className="label-uppercase mb-4 block">Outdoor Exploration</span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-nursery-slate mb-6">
-                Fresh air,<br />
+                Fresh air,
+                <br />
                 <span className="text-nursery-tangerine">big discoveries.</span>
               </h2>
               <p className="text-nursery-slate-muted mb-8 text-lg">
-                Our outdoor time is built into every day—gardening, obstacle play, and nature walks that build confidence and coordination.
+                Our outdoor time is built into every day—gardening, obstacle play, and
+                nature walks that build confidence and coordination.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -334,7 +470,9 @@ const Home = () => {
                     <div className="icon-circle mb-3">
                       <feature.icon className="w-5 h-5" />
                     </div>
-                    <h4 className="font-bold text-nursery-slate text-sm mb-1">{feature.title}</h4>
+                    <h4 className="font-bold text-nursery-slate text-sm mb-1">
+                      {feature.title}
+                    </h4>
                     <p className="text-xs text-nursery-slate-muted">{feature.desc}</p>
                   </div>
                 ))}
@@ -348,8 +486,7 @@ const Home = () => {
         </div>
       </section>
 
-     
-{/* Team Section */}
+      {/* Team Section */}
       <section className="relative py-24 overflow-hidden bg-nursery-mint/30">
         <div className="section-container">
           <div className="text-center max-w-2xl mx-auto mb-16 scroll-animate opacity-0">
@@ -358,18 +495,14 @@ const Home = () => {
               Dedicated <span className="text-nursery-tangerine">professionals</span>
             </h2>
             <p className="text-nursery-slate-muted text-lg">
-              Our qualified educators bring passion, experience, and genuine love for early childhood development.
+              Our qualified educators bring passion, experience, and genuine love for
+              early childhood development.
             </p>
           </div>
 
           <div className="sm:hidden -mx-1 overflow-x-auto px-1 pb-4 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="flex gap-4 pr-6">
-              {[
-                { name: 'Emma Thompson', role: 'Nursery Director', image: '/team-director.jpg' },
-                { name: 'Sophie Williams', role: 'Lead Teacher', image: '/team-teacher1.jpg' },
-                { name: 'James Anderson', role: 'Early Years Educator', image: '/team-teacher2.jpg' },
-                { name: 'Margaret Chen', role: 'Nursery Nurse', image: '/team-nurse.jpg' },
-              ].map((member, index) => (
+              {teamMembers.map((member, index) => (
                 <div
                   key={index}
                   className="w-[82%] flex-shrink-0 snap-start bg-white rounded-[2rem] p-6 shadow-soft hover:shadow-soft-lg transition-all duration-300 scroll-animate opacity-0"
@@ -390,12 +523,7 @@ const Home = () => {
           </div>
 
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { name: 'Emma Thompson', role: 'Nursery Director', image: '/team-director.jpg' },
-              { name: 'Sophie Williams', role: 'Lead Teacher', image: '/team-teacher1.jpg' },
-              { name: 'James Anderson', role: 'Early Years Educator', image: '/team-teacher2.jpg' },
-              { name: 'Margaret Chen', role: 'Nursery Nurse', image: '/team-nurse.jpg' },
-            ].map((member, index) => (
+            {teamMembers.map((member, index) => (
               <div
                 key={index}
                 className="bg-white rounded-[2rem] p-6 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:-translate-y-1 scroll-animate opacity-0"
@@ -429,14 +557,17 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
               <div
-                key={index}
+                key={`${testimonial.author}-${index}`}
                 className="bg-white rounded-[2rem] p-8 shadow-soft hover:shadow-soft-lg transition-all duration-300 scroll-animate opacity-0"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <Quote className="w-10 h-10 text-nursery-tangerine/30 mb-4" />
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-nursery-tangerine fill-nursery-tangerine" />
+                    <Star
+                      key={i}
+                      className="w-5 h-5 text-nursery-tangerine fill-nursery-tangerine"
+                    />
                   ))}
                 </div>
                 <p className="text-nursery-slate mb-6 leading-relaxed">
@@ -455,16 +586,18 @@ const Home = () => {
         <div className="section-container relative z-10">
           <div className="max-w-3xl mx-auto text-center scroll-animate opacity-0">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-nursery-slate mb-6">
-              Ready to give your child the <span className="text-nursery-tangerine">best start?</span>
+              Ready to give your child the{' '}
+              <span className="text-nursery-tangerine">best start?</span>
             </h2>
             <p className="text-nursery-slate-muted text-lg mb-8">
-              Book a personal tour to see our nursery in action. We'd love to show you around!
+              Book a personal tour to see our nursery in action. We'd love to show
+              you around!
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/contact" className="btn-primary">
                 Book a Tour
               </Link>
-              <a href={SITE.phoneHref} className="btn-outline">
+              <a href={phoneHref} className="btn-outline">
                 Call Us
               </a>
             </div>

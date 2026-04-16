@@ -72,10 +72,31 @@ const defaultSettings: SettingsState = {
 };
 
 const imageFallbacks: Record<string, Omit<SiteImage, 'id'>> = {
+  site_logo: {
+    key: 'site_logo',
+    title: 'Site Logo',
+    image_url: '/logo-cropped.png',
+    alt_text: 'Happy Hearts Daycare logo',
+    page: 'global',
+  },
+  site_logo_white: {
+    key: 'site_logo_white',
+    title: 'Footer Logo',
+    image_url: '/logo-white.png',
+    alt_text: 'Happy Hearts Daycare white logo',
+    page: 'global',
+  },
+  site_favicon: {
+    key: 'site_favicon',
+    title: 'Favicon',
+    image_url: '/favicon.png',
+    alt_text: 'Happy Hearts Daycare favicon',
+    page: 'global',
+  },
   home_hero_image: {
     key: 'home_hero_image',
     title: 'Homepage Hero',
-    image_url: '/hero-banner.jpg',
+    image_url: '/hero-child.jpg',
     alt_text: 'Happy child at daycare',
     page: 'home',
   },
@@ -138,7 +159,7 @@ const imageFallbacks: Record<string, Omit<SiteImage, 'id'>> = {
   programs_banner_image: {
     key: 'programs_banner_image',
     title: 'Programs Banner',
-    image_url: '/programs-banner.jpg',
+    image_url: '/children-playing.jpg',
     alt_text: 'Children in class',
     page: 'programs',
   },
@@ -148,6 +169,34 @@ const imageFallbacks: Record<string, Omit<SiteImage, 'id'>> = {
     image_url: '/contact-banner.jpg',
     alt_text: 'Nursery contact banner',
     page: 'contact',
+  },
+  team_member_1: {
+    key: 'team_member_1',
+    title: 'Team Member 1',
+    image_url: '/team-director.jpg',
+    alt_text: 'Emma Thompson',
+    page: 'home',
+  },
+  team_member_2: {
+    key: 'team_member_2',
+    title: 'Team Member 2',
+    image_url: '/team-teacher1.jpg',
+    alt_text: 'Sophie Williams',
+    page: 'home',
+  },
+  team_member_3: {
+    key: 'team_member_3',
+    title: 'Team Member 3',
+    image_url: '/team-teacher2.jpg',
+    alt_text: 'James Anderson',
+    page: 'home',
+  },
+  team_member_4: {
+    key: 'team_member_4',
+    title: 'Team Member 4',
+    image_url: '/team-nurse.jpg',
+    alt_text: 'Margaret Chen',
+    page: 'home',
   },
 };
 
@@ -226,11 +275,15 @@ const AdminDashboard = () => {
 
   const imageList = useMemo(
     () =>
-      Object.values(mergedImages).sort((a, b) =>
-        (a.page ?? '').localeCompare(b.page ?? '') || (a.title ?? '').localeCompare(b.title ?? ''),
+      Object.values(mergedImages).sort(
+        (a, b) =>
+          (a.page ?? '').localeCompare(b.page ?? '') ||
+          (a.title ?? '').localeCompare(b.title ?? ''),
       ),
     [mergedImages],
   );
+
+  const headerLogo = mergedImages.site_logo?.image_url || '/logo-cropped.png';
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -360,8 +413,8 @@ const AdminDashboard = () => {
 
   if (isBooting) {
     return (
-      <div className="min-h-screen bg-nursery-cream flex items-center justify-center">
-        <div className="flex items-center gap-3 rounded-2xl bg-white px-6 py-4 shadow-soft">
+      <div className="min-h-screen bg-nursery-cream flex items-center justify-center px-4">
+        <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 shadow-soft">
           <Loader2 className="h-5 w-5 animate-spin text-nursery-tangerine" />
           <p className="font-medium text-nursery-slate">Loading dashboard…</p>
         </div>
@@ -371,53 +424,92 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-nursery-cream">
-      <header className="sticky top-0 z-50 border-b border-nursery-mint bg-white">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <img src="/logo-cropped.png" alt="Logo" className="h-10 w-auto" />
-            <div>
-              <h1 className="font-bold text-nursery-slate">Admin Dashboard</h1>
-              <p className="text-xs text-nursery-slate-muted">
-                Happy Hearts Daycare
-              </p>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <header className="sticky top-0 z-50 border-b border-nursery-mint bg-white/95 backdrop-blur">
+          <div className="px-4 py-4 sm:px-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="min-w-0">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <img
+                    src={headerLogo}
+                    alt="Logo"
+                    className="h-10 w-auto shrink-0 object-contain sm:h-12"
+                  />
+                  <div className="min-w-0">
+                    <h1 className="text-lg font-bold text-nursery-slate sm:text-xl">
+                      Admin Dashboard
+                    </h1>
+                    <p className="truncate text-xs text-nursery-slate-muted sm:text-sm">
+                      {settings.site_name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Button
+                  onClick={handleSaveSettings}
+                  disabled={isSavingSettings}
+                  className="btn-primary border-0 flex-1 gap-2 sm:flex-none"
+                >
+                  {isSavingSettings ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                  <span className="hidden sm:inline">Save Settings</span>
+                  <span className="sm:hidden">Save</span>
+                </Button>
+
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="border-nursery-mint text-nursery-slate hover:bg-nursery-mint"
+                >
+                  <LogOut className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Logout</span>
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-4 lg:hidden">
+              <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-2xl bg-nursery-cream p-1 sm:grid-cols-4">
+                <TabsTrigger
+                  value="general"
+                  className="rounded-xl px-3 py-3 text-xs data-[state=active]:bg-nursery-tangerine data-[state=active]:text-white"
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  General
+                </TabsTrigger>
+                <TabsTrigger
+                  value="images"
+                  className="rounded-xl px-3 py-3 text-xs data-[state=active]:bg-nursery-tangerine data-[state=active]:text-white"
+                >
+                  <ImageIcon className="mr-2 h-4 w-4" />
+                  Images
+                </TabsTrigger>
+                <TabsTrigger
+                  value="testimonials"
+                  className="rounded-xl px-3 py-3 text-xs data-[state=active]:bg-nursery-tangerine data-[state=active]:text-white"
+                >
+                  <Quote className="mr-2 h-4 w-4" />
+                  Reviews
+                </TabsTrigger>
+                <TabsTrigger
+                  value="account"
+                  className="rounded-xl px-3 py-3 text-xs data-[state=active]:bg-nursery-tangerine data-[state=active]:text-white"
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  Account
+                </TabsTrigger>
+              </TabsList>
             </div>
           </div>
+        </header>
 
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleSaveSettings}
-              disabled={isSavingSettings}
-              className="btn-primary border-0 flex items-center gap-2"
-            >
-              {isSavingSettings ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
-              )}
-              Save Settings
-            </Button>
-
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="border-nursery-mint text-nursery-slate hover:bg-nursery-mint"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex">
-        <aside className="sticky top-[73px] min-h-[calc(100vh-73px)] w-64 border-r border-nursery-mint bg-white">
-          <nav className="p-4">
-            <Tabs
-              orientation="vertical"
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
+        <div className="lg:flex">
+          <aside className="sticky top-[113px] hidden min-h-[calc(100vh-113px)] w-64 border-r border-nursery-mint bg-white lg:block">
+            <nav className="p-4">
               <TabsList className="flex h-auto w-full flex-col gap-1 bg-transparent">
                 <TabsTrigger
                   value="general"
@@ -451,19 +543,17 @@ const AdminDashboard = () => {
                   Account
                 </TabsTrigger>
               </TabsList>
-            </Tabs>
-          </nav>
-        </aside>
+            </nav>
+          </aside>
 
-        <main className="flex-1 p-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
             <TabsContent value="general" className="mt-0">
-              <div className="max-w-4xl">
+              <div className="mx-auto max-w-4xl">
                 <h2 className="mb-6 text-2xl font-bold text-nursery-slate">
                   General Settings
                 </h2>
 
-                <div className="space-y-6 rounded-[2rem] bg-white p-8 shadow-soft">
+                <div className="space-y-6 rounded-[2rem] bg-white p-5 shadow-soft sm:p-8">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label>Site Name</Label>
@@ -524,7 +614,7 @@ const AdminDashboard = () => {
                   <div className="space-y-2">
                     <Label>Address</Label>
                     <div className="relative">
-                      <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-nursery-slate-muted" />
+                      <MapPin className="absolute left-4 top-4 h-5 w-5 text-nursery-slate-muted" />
                       <Input
                         value={settings.address}
                         onChange={(e) =>
@@ -620,7 +710,7 @@ const AdminDashboard = () => {
 
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                   {imageList.map((image) => (
-                    <div key={image.key} className="rounded-[2rem] bg-white p-6 shadow-soft">
+                    <div key={image.key} className="rounded-[2rem] bg-white p-5 shadow-soft sm:p-6">
                       <div className="mb-4 aspect-video overflow-hidden rounded-2xl bg-nursery-cream">
                         <img
                           src={image.image_url}
@@ -663,7 +753,7 @@ const AdminDashboard = () => {
                           />
                         </div>
 
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                           <Label className="cursor-pointer">
                             <Input
                               type="file"
@@ -671,7 +761,7 @@ const AdminDashboard = () => {
                               className="hidden"
                               onChange={(e) => handleImageUpload(image.key, e)}
                             />
-                            <div className="inline-flex items-center justify-center gap-2 rounded-xl bg-nursery-mint px-4 py-3 font-medium text-nursery-slate transition-colors hover:bg-nursery-green-light">
+                            <div className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-nursery-mint px-4 py-3 font-medium text-nursery-slate transition-colors hover:bg-nursery-green-light sm:w-auto">
                               {uploadingKey === image.key ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                               ) : (
@@ -704,7 +794,7 @@ const AdminDashboard = () => {
 
             <TabsContent value="testimonials" className="mt-0">
               <div className="grid grid-cols-1 gap-8 xl:grid-cols-[420px_1fr]">
-                <div className="rounded-[2rem] bg-white p-8 shadow-soft">
+                <div className="rounded-[2rem] bg-white p-5 shadow-soft sm:p-8">
                   <h2 className="mb-6 text-2xl font-bold text-nursery-slate">
                     Add Testimonial
                   </h2>
@@ -774,7 +864,7 @@ const AdminDashboard = () => {
                   </form>
                 </div>
 
-                <div className="rounded-[2rem] bg-white p-8 shadow-soft">
+                <div className="rounded-[2rem] bg-white p-5 shadow-soft sm:p-8">
                   <h2 className="mb-6 text-2xl font-bold text-nursery-slate">
                     Current Testimonials
                   </h2>
@@ -810,14 +900,14 @@ const AdminDashboard = () => {
             </TabsContent>
 
             <TabsContent value="account" className="mt-0">
-              <div className="max-w-xl">
+              <div className="mx-auto max-w-xl">
                 <h2 className="mb-6 text-2xl font-bold text-nursery-slate">
                   Account
                 </h2>
 
-                <div className="space-y-6 rounded-[2rem] bg-white p-8 shadow-soft">
+                <div className="space-y-6 rounded-[2rem] bg-white p-5 shadow-soft sm:p-8">
                   <div className="flex items-center gap-4 border-b border-nursery-mint pb-6">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-nursery-tangerine text-2xl font-bold text-white">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-nursery-tangerine text-xl font-bold text-white sm:h-16 sm:w-16 sm:text-2xl">
                       A
                     </div>
                     <div>
@@ -851,12 +941,12 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </TabsContent>
-          </Tabs>
-        </main>
-      </div>
+          </main>
+        </div>
+      </Tabs>
 
       <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
-        <DialogContent className="rounded-[2rem]">
+        <DialogContent className="rounded-[2rem] max-w-[92vw] sm:max-w-lg">
           <DialogHeader className="text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <CheckCircle2 className="h-8 w-8 text-green-600" />
