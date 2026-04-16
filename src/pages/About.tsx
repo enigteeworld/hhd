@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import {
   Heart,
   Shield,
-  Award,
   Sparkles,
   CheckCircle2,
   Calendar,
   Clock,
   MapPin,
+  MessageCircleHeart,
 } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -42,10 +42,6 @@ const About = () => {
   }, []);
 
   const siteName = getSetting('site_name', SITE.name);
-  const aboutText = getSetting(
-    'about_text',
-    'Happy Hearts Daycare started with a simple vision: to create a childcare setting that we would want for our own children. A place that feels less like an institution and more like an extension of your home.',
-  );
   const openingHours = getSetting('opening_hours', SITE.openingHours);
   const address = getSetting('address', SITE.addressLines.join(', '));
 
@@ -61,90 +57,101 @@ const About = () => {
   const heroImage = getImage(
     'about_hero_image',
     '/nursery-interior.jpg',
-    'Happy Hearts Daycare interior',
+    'Warm and welcoming childminding setting',
   );
   const galleryOne = getImage(
     'about_gallery_one',
     '/children-playing.jpg',
-    'Children playing',
+    'Children enjoying play time',
   );
   const galleryTwo = getImage(
     'about_gallery_two',
     '/activity-painting.jpg',
-    'Art activities',
+    'Creative play and painting activities',
   );
   const galleryThree = getImage(
     'about_gallery_three',
     '/mealtime-child.jpg',
-    'Meal time',
+    'Meal time in a calm setting',
   );
   const galleryFour = getImage(
     'about_gallery_four',
     '/outdoor-exploration.jpg',
-    'Outdoor play',
+    'Outdoor play and exploration',
   );
 
   const values = [
     {
       icon: Heart,
-      title: 'Nurturing Care',
+      title: 'Nurturing care',
       description:
-        'Every child is treated with individual attention, respect, and unconditional positive regard.',
+        'Every child is treated with warmth, patience, individual attention, and genuine care.',
     },
     {
       icon: Shield,
-      title: 'Safe Environment',
+      title: 'Safe and welcoming setting',
       description:
-        'Our premises are designed with child safety as the top priority, with secure access and constant supervision.',
-    },
-    {
-      icon: Award,
-      title: 'Qualified Staff',
-      description:
-        'All our educators are fully qualified, DBS checked, and passionate about early years development.',
+        'Children are cared for in an environment where they can feel secure, valued, and confident.',
     },
     {
       icon: Sparkles,
-      title: 'Learning Through Play',
+      title: 'Tailored daily activities',
       description:
-        'We follow the EYFS framework, ensuring children learn naturally through guided play and exploration.',
+        'Activities are adapted to each child’s interests, stage of development, and personality.',
+    },
+    {
+      icon: MessageCircleHeart,
+      title: 'Strong parent partnership',
+      description:
+        'Open and honest communication helps build trust, consistency, and peace of mind for families.',
     },
   ];
 
   const features = [
-    'OFSTED-registered nursery',
-    'Fully qualified staff team',
-    'Nutritious meals provided',
-    'Daily outdoor activities',
-    'Regular progress updates',
-    'Secure premises with CCTV',
-    'Flexible session options',
-    'Sibling discounts available',
+    'Home-from-home childminding setting',
+    'Creative play, story time, and songs',
+    'Healthy meals and snacks',
+    'Daily outdoor play and walks',
+    'Nap and quiet time built into the day',
+    'Activities tailored to each child',
+    'Warm communication with parents',
+    'Inclusive care for different backgrounds and needs',
+  ];
+
+  const bioParagraphs = [
+    'I am a dedicated and nurturing childminder with a genuine passion for supporting children’s growth, development, and happiness. With a caring and patient approach, I create a safe, welcoming environment where children feel valued, confident, and free to explore the world around them.',
+    'I believe every child is unique, and I take pride in tailoring activities to suit each child’s interests and developmental stage. From creative play and story telling to outdoor adventures and early learning activities, I aim to make each day engaging, fun, and enriching.',
+    'Building strong relationships with both children and their families is at the heart of what I do. I maintain open, honest communication with parents to help ensure consistency, trust, and peace of mind.',
+    'Having lots of experience in adult and elderly care, I have now dedicated myself to caring for children. Over time I have completed mandatory training and worked with people from different cultures and ethnic backgrounds, helping me build a respectful and inclusive approach to care.',
   ];
 
   return (
     <div className="min-h-screen bg-nursery-cream">
       <Navigation />
 
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-nursery-mint/30 rounded-l-[100px] -z-10" />
+      <section className="relative overflow-hidden pb-20 pt-32">
+        <div className="absolute top-0 right-0 -z-10 h-full w-1/2 rounded-l-[100px] bg-nursery-mint/30" />
 
         <div className="section-container">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <div className="scroll-animate opacity-0">
-              <span className="label-uppercase mb-4 block">About Us</span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-nursery-slate leading-tight mb-6">
-                More than a nursery,
+              <span className="label-uppercase mb-4 block">About Me</span>
+              <h1 className="mb-6 text-4xl font-bold leading-tight text-nursery-slate md:text-5xl lg:text-6xl">
+                A caring childminder
                 <br />
-                <span className="text-nursery-tangerine">we are family.</span>
+                <span className="text-nursery-tangerine">you can trust.</span>
               </h1>
-              <p className="text-lg text-nursery-slate-muted mb-8">{aboutText}</p>
+              <p className="mb-8 text-lg text-nursery-slate-muted">
+                At {siteName}, the focus is on providing warm, home-from-home childcare
+                where children feel safe, supported, and happy while learning through
+                play and everyday routine.
+              </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/contact" className="btn-primary">
-                  Book a Tour
+                  Arrange a Visit
                 </Link>
                 <Link to="/programs" className="btn-outline">
-                  Our Programs
+                  See Daily Routine
                 </Link>
               </div>
             </div>
@@ -157,7 +164,7 @@ const About = () => {
                 badge={{
                   emoji: '🤍',
                   eyebrow: 'Warm welcome',
-                  text: 'A calm, homely setting for little learners',
+                  text: 'A calm, home-from-home setting for little ones',
                   position: 'bottom-left',
                 }}
               />
@@ -168,48 +175,51 @@ const About = () => {
 
       <section className="py-20">
         <div className="section-container">
-          <div className="max-w-4xl mx-auto text-center scroll-animate opacity-0">
-            <span className="label-uppercase mb-4 block">Our Story</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-nursery-slate mb-6">
-              Building Foundations for the <span className="text-nursery-tangerine">Future</span>
-            </h2>
-            <p className="text-nursery-slate-muted text-lg leading-relaxed mb-8">
-              Founded in 2014, {siteName} has grown from a small home-based nursery to a
-              trusted childcare provider in the Manchester community. Our journey has been
-              guided by one simple principle: every child deserves the best possible start
-              in life.
-            </p>
-            <p className="text-nursery-slate-muted text-lg leading-relaxed">
-              We believe that the early years are the most critical in a child's
-              development. Learning is encouraged through curiosity, play, and supportive
-              adult guidance. Our dedicated team works closely with parents to ensure each
-              child receives personalized care that meets their unique needs.
-            </p>
+          <div className="mx-auto max-w-4xl scroll-animate opacity-0">
+            <div className="mb-8 text-center">
+              <span className="label-uppercase mb-4 block">My Approach</span>
+              <h2 className="mb-6 text-3xl font-bold text-nursery-slate md:text-4xl">
+                A personal approach to <span className="text-nursery-tangerine">care</span>
+              </h2>
+            </div>
+
+            <div className="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8 lg:p-10">
+              <div className="space-y-6">
+                {bioParagraphs.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className="text-base leading-8 text-nursery-slate-muted sm:text-lg"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-nursery-mint/30">
+      <section className="bg-nursery-mint/30 py-20">
         <div className="section-container">
-          <div className="text-center max-w-2xl mx-auto mb-16 scroll-animate opacity-0">
-            <span className="label-uppercase mb-4 block">Our Values</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-nursery-slate mb-6">
-              What We <span className="text-nursery-tangerine">Stand For</span>
+          <div className="mx-auto mb-16 max-w-2xl text-center scroll-animate opacity-0">
+            <span className="label-uppercase mb-4 block">What Matters Most</span>
+            <h2 className="mb-6 text-3xl font-bold text-nursery-slate md:text-4xl">
+              Care built on <span className="text-nursery-tangerine">trust and warmth</span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {values.map((value, index) => (
               <div
                 key={index}
-                className="bg-white rounded-[2rem] p-8 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:-translate-y-1 scroll-animate opacity-0"
+                className="scroll-animate rounded-[2rem] bg-white p-8 opacity-0 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-soft-lg"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="icon-circle mb-6">
-                  <value.icon className="w-6 h-6" />
+                  <value.icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-bold text-nursery-slate text-xl mb-3">{value.title}</h3>
-                <p className="text-nursery-slate-muted text-sm leading-relaxed">
+                <h3 className="mb-3 text-xl font-bold text-nursery-slate">{value.title}</h3>
+                <p className="text-sm leading-relaxed text-nursery-slate-muted">
                   {value.description}
                 </p>
               </div>
@@ -220,22 +230,23 @@ const About = () => {
 
       <section className="py-20">
         <div className="section-container">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
             <div className="scroll-animate opacity-0">
-              <span className="label-uppercase mb-4 block">Facilities</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-nursery-slate mb-6">
-                A Space Designed for <span className="text-nursery-tangerine">Learning & Play</span>
+              <span className="label-uppercase mb-4 block">A Typical Day</span>
+              <h2 className="mb-6 text-3xl font-bold text-nursery-slate md:text-4xl">
+                A gentle routine for <span className="text-nursery-tangerine">play, rest, and learning</span>
               </h2>
-              <p className="text-nursery-slate-muted mb-8">
-                Our purpose-built facilities provide a safe, stimulating environment where
-                children can explore, learn, and grow at their own pace.
+              <p className="mb-8 text-nursery-slate-muted">
+                Children benefit from a calm and consistent routine that includes play,
+                meals, stories, outdoor time, naps or quiet time, and warm support
+                throughout the day.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {features.map((feature, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-nursery-tangerine flex-shrink-0" />
-                    <span className="text-nursery-slate text-sm">{feature}</span>
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-nursery-tangerine" />
+                    <span className="text-sm text-nursery-slate">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -247,28 +258,28 @@ const About = () => {
                   <img
                     src={galleryOne.src}
                     alt={galleryOne.alt}
-                    className="h-48 w-full object-cover transition-transform duration-700 hover:scale-[1.04]"
+                    className="h-40 w-full object-cover transition-transform duration-700 hover:scale-[1.04] sm:h-48"
                   />
                 </div>
                 <div className="mt-8 overflow-hidden rounded-[2rem] border-4 border-white shadow-soft transition-transform duration-500 hover:-translate-y-1 hover:rotate-[1deg]">
                   <img
                     src={galleryTwo.src}
                     alt={galleryTwo.alt}
-                    className="h-48 w-full object-cover transition-transform duration-700 hover:scale-[1.04]"
+                    className="h-40 w-full object-cover transition-transform duration-700 hover:scale-[1.04] sm:h-48"
                   />
                 </div>
-                <div className="-mt-8 overflow-hidden rounded-[2rem] border-4 border-white shadow-soft transition-transform duration-500 hover:-translate-y-1 hover:rotate-[1deg]">
+                <div className="-mt-4 sm:-mt-8 overflow-hidden rounded-[2rem] border-4 border-white shadow-soft transition-transform duration-500 hover:-translate-y-1 hover:rotate-[1deg]">
                   <img
                     src={galleryThree.src}
                     alt={galleryThree.alt}
-                    className="h-48 w-full object-cover transition-transform duration-700 hover:scale-[1.04]"
+                    className="h-40 w-full object-cover transition-transform duration-700 hover:scale-[1.04] sm:h-48"
                   />
                 </div>
                 <div className="overflow-hidden rounded-[2rem] border-4 border-white shadow-soft transition-transform duration-500 hover:-translate-y-1 hover:rotate-[-1deg]">
                   <img
                     src={galleryFour.src}
                     alt={galleryFour.alt}
-                    className="h-48 w-full object-cover transition-transform duration-700 hover:scale-[1.04]"
+                    className="h-40 w-full object-cover transition-transform duration-700 hover:scale-[1.04] sm:h-48"
                   />
                 </div>
               </div>
@@ -277,16 +288,17 @@ const About = () => {
         </div>
       </section>
 
-      <section className="py-20 bg-nursery-mint/30">
+      <section className="bg-nursery-mint/30 py-20">
         <div className="section-container">
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="bg-white rounded-[2rem] p-8 shadow-soft scroll-animate opacity-0">
-              <div className="flex items-center gap-4 mb-6">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div className="scroll-animate rounded-[2rem] bg-white p-6 opacity-0 shadow-soft sm:p-8">
+              <div className="mb-6 flex items-center gap-4">
                 <div className="icon-circle">
-                  <Clock className="w-6 h-6" />
+                  <Clock className="h-6 w-6" />
                 </div>
-                <h3 className="font-bold text-nursery-slate text-2xl">Opening Hours</h3>
+                <h3 className="text-2xl font-bold text-nursery-slate">Opening Hours</h3>
               </div>
+
               <div className="space-y-3">
                 {[
                   { day: 'Monday - Friday', hours: openingHours.replace('Mon - Fri: ', '') },
@@ -295,7 +307,7 @@ const About = () => {
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="flex justify-between items-center py-2 border-b border-nursery-mint last:border-0"
+                    className="flex flex-col gap-1 border-b border-nursery-mint py-2 last:border-0 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <span className="text-nursery-slate">{item.day}</span>
                     <span className="font-medium text-nursery-tangerine">{item.hours}</span>
@@ -304,18 +316,19 @@ const About = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-[2rem] p-8 shadow-soft scroll-animate opacity-0">
-              <div className="flex items-center gap-4 mb-6">
+            <div className="scroll-animate rounded-[2rem] bg-white p-6 opacity-0 shadow-soft sm:p-8">
+              <div className="mb-6 flex items-center gap-4">
                 <div className="icon-circle">
-                  <MapPin className="w-6 h-6" />
+                  <MapPin className="h-6 w-6" />
                 </div>
-                <h3 className="font-bold text-nursery-slate text-2xl">Find Us</h3>
+                <h3 className="text-2xl font-bold text-nursery-slate">Find Me</h3>
               </div>
+
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-nursery-tangerine flex-shrink-0 mt-1" />
+                  <MapPin className="mt-1 h-5 w-5 flex-shrink-0 text-nursery-tangerine" />
                   <div>
-                    <p className="text-nursery-slate font-medium">{siteName}</p>
+                    <p className="font-medium text-nursery-slate">{siteName}</p>
                     {addressLines.map((line) => (
                       <p key={line} className="text-nursery-slate-muted">
                         {line}
@@ -323,10 +336,12 @@ const About = () => {
                     ))}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-nursery-tangerine flex-shrink-0" />
+
+                <div className="flex items-start gap-3">
+                  <Calendar className="mt-1 h-5 w-5 flex-shrink-0 text-nursery-tangerine" />
                   <p className="text-nursery-slate-muted">
-                    Open 51 weeks per year (closed Bank Holidays)
+                    A calm and caring setting with daily routine, play, meals, outdoor
+                    time, and rest built into the day.
                   </p>
                 </div>
               </div>
@@ -337,19 +352,19 @@ const About = () => {
 
       <section className="py-20">
         <div className="section-container">
-          <div className="bg-nursery-tangerine rounded-[2rem] p-12 text-center scroll-animate opacity-0">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Come and See Us!
+          <div className="scroll-animate rounded-[2rem] bg-nursery-tangerine p-8 text-center opacity-0 sm:p-12">
+            <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+              Come and See the Setting
             </h2>
-            <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-              We'd love to show you around our nursery. Book a personal tour and see why
-              families choose {siteName}.
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-white/90">
+              If you would like to know more, ask questions, or arrange a visit, I would
+              be happy to hear from you and talk about your childcare needs.
             </p>
             <Link
               to="/contact"
-              className="inline-block bg-white text-nursery-tangerine font-bold px-8 py-4 rounded-full hover:bg-nursery-cream transition-colors"
+              className="inline-block rounded-full bg-white px-8 py-4 font-bold text-nursery-tangerine transition-colors hover:bg-nursery-cream"
             >
-              Book Your Tour Today
+              Arrange a Visit
             </Link>
           </div>
         </div>

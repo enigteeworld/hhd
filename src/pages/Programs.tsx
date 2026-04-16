@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, Clock } from 'lucide-react';
+import { CheckCircle2, Clock, Utensils, Moon, Trees, BookOpen, Heart } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { SITE } from '@/lib/site';
@@ -33,214 +33,215 @@ const Programs = () => {
     return () => observer.disconnect();
   }, []);
 
-  const siteShortName = getSetting('site_name', SITE.shortName);
+  const siteName = getSetting('site_name', SITE.name);
+  const openingHours = getSetting('opening_hours', SITE.openingHours);
+  const phone = getSetting('phone', SITE.phoneDisplay);
+  const phoneHref = `tel:${phone.replace(/[^\d+]/g, '')}`;
+
   const programsBanner = getImage(
     'programs_banner_image',
     '/children-playing.jpg',
-    'Children learning through play',
+    'Children enjoying play and learning',
   );
 
-  const programs = [
+  const dayHighlights = [
+    {
+      emoji: '🎨',
+      title: 'Creative play',
+      description:
+        'Arts, crafts, messy play, puzzles, and sensory activities that keep children engaged and happy.',
+    },
+    {
+      emoji: '📚',
+      title: 'Stories and songs',
+      description:
+        'Story time, songs, and calm group moments that support language, confidence, and listening.',
+    },
+    {
+      emoji: '🌿',
+      title: 'Outdoor time',
+      description:
+        'Garden play, walks, fresh air, and active movement are an important part of the day.',
+    },
+    {
+      emoji: '🍎',
+      title: 'Meals and snacks',
+      description:
+        'Healthy snacks, lunch, and home-made meals prepared with children’s needs in mind.',
+    },
+    {
+      emoji: '😴',
+      title: 'Nap and quiet time',
+      description:
+        'Younger children can rest while older children enjoy calmer activities such as reading and drawing.',
+    },
+    {
+      emoji: '🤍',
+      title: 'Warm daily care',
+      description:
+        'A gentle routine that helps children feel safe, settled, and cared for from arrival to home time.',
+    },
+  ];
+
+  const ageGroups = [
     {
       emoji: '👶',
-      title: 'Tweenies',
+      title: 'Babies and younger children',
       age: '0 - 2 years',
       description:
-        'Our baby room is calm, cosy, and responsive, helping little ones build secure attachments while discovering the world through sensory play.',
+        'A calm, caring routine with sensory play, naps, meals, cuddles, and gentle support throughout the day.',
       features: [
-        'Sensory play activities',
-        'Individual sleep routines',
-        'Milk and weaning support',
-        'Daily parent updates',
-        '1:3 staff ratio',
+        'Individual sleep and rest needs',
+        'Sensory play and early discovery',
+        'Milk, meals, and snack support',
+        'Warm and responsive care',
       ],
       tint: 'from-[#eef6fb] to-white',
       accent: 'text-[#6f94c9]',
     },
     {
-      emoji: '🚀',
+      emoji: '🧸',
       title: 'Toddlers',
       age: '2 - 3 years',
       description:
-        'Busy explorers grow in confidence through messy play, movement, language-rich routines, and plenty of guided choice throughout the day.',
+        'Busy little ones enjoy creative play, songs, movement, outdoor time, and simple routines that build confidence.',
       features: [
-        'Potty training support',
-        'Early language development',
-        'Messy play and art',
-        'Small-group activities',
-        '1:4 staff ratio',
+        'Messy play and creative activities',
+        'Outdoor play and movement',
+        'Story time and songs',
+        'Support with independence',
       ],
       tint: 'from-[#fff3e9] to-white',
       accent: 'text-[#e28061]',
     },
     {
-      emoji: '🎓',
-      title: 'Preschoolers',
+      emoji: '🚀',
+      title: 'Older children',
       age: '3 - 5 years',
       description:
-        'School readiness without the pressure — playful phonics, early maths, social confidence, and independence all woven into joyful daily learning.',
+        'Children continue to learn through play, conversation, routines, and activities that match their stage of development.',
       features: [
-        'Phonics & literacy',
-        'School readiness programme',
-        'Independent learning',
-        'Creative investigations',
-        '1:8 staff ratio',
+        'Early learning through play',
+        'Creative and imaginative activities',
+        'Small-group and quiet-time moments',
+        'Confidence-building daily routine',
       ],
       tint: 'from-[#eef7e8] to-white',
       accent: 'text-[#4a8a61]',
     },
   ];
 
-  const activities = [
-    {
-      emoji: '🎵',
-      title: 'Music & Movement',
-      description:
-        'Songs, dance, rhythm, and action games that build confidence and coordination.',
-    },
-    {
-      emoji: '🎨',
-      title: 'Creative Arts',
-      description:
-        'Painting, mark making, collage, and imaginative expression every single week.',
-    },
-    {
-      emoji: '🚲',
-      title: 'Physical Play',
-      description:
-        'Bikes, climbing, balancing, and movement challenges that keep little bodies active.',
-    },
-    {
-      emoji: '🌿',
-      title: 'Nature Exploration',
-      description:
-        'Gardening, outdoor discovery, and first-hand learning from the natural world.',
-    },
-    {
-      emoji: '📚',
-      title: 'Story Time',
-      description:
-        'Daily books, nursery rhymes, storytelling, and language-rich conversations.',
-    },
-    {
-      emoji: '☀️',
-      title: 'Outdoor Play',
-      description:
-        'Fresh air and child-led adventure built into each day, whatever the season.',
-    },
-  ];
-
-  const eyfsAreas = [
-    {
-      emoji: '🗣️',
-      eyebrow: 'Prime Area',
-      title: 'Communication & Language',
-      desc: 'Confidence in listening, understanding, speaking, and expressing ideas.',
-      bg: 'bg-[#eef2f2]',
-    },
-    {
-      emoji: '🏃',
-      eyebrow: 'Prime Area',
-      title: 'Physical Development',
-      desc: 'Movement, coordination, health, self-care, and growing independence.',
-      bg: 'bg-white',
-    },
-    {
-      emoji: '🤝',
-      eyebrow: 'Prime Area',
-      title: 'Personal, Social & Emotional',
-      desc: 'Positive relationships, self-awareness, resilience, and empathy for others.',
-      bg: 'bg-[#dff0ff]',
-    },
-    {
-      emoji: '📖',
-      eyebrow: 'Specific Area',
-      title: 'Literacy',
-      desc: 'Reading, mark making, storytelling, and a love of language.',
-      bg: 'bg-[#24493f] text-white',
-      descClass: 'text-white/80',
-      eyebrowClass: 'text-[#f0a27e]',
-    },
-    {
-      emoji: '🧮',
-      eyebrow: 'Specific Area',
-      title: 'Mathematics',
-      desc: 'Numbers, counting, patterns, shapes, space, and problem solving.',
-      bg: 'bg-[#24493f] text-white',
-      descClass: 'text-white/80',
-      eyebrowClass: 'text-[#f0a27e]',
-    },
-    {
-      emoji: '🌍',
-      eyebrow: 'Specific Area',
-      title: 'Understanding the World',
-      desc: 'People, communities, technology, culture, and nature.',
-      bg: 'bg-[#24493f] text-white',
-      descClass: 'text-white/80',
-      eyebrowClass: 'text-[#f0a27e]',
-    },
-    {
-      emoji: '🖌️',
-      eyebrow: 'Specific Area',
-      title: 'Expressive Arts & Design',
-      desc: 'Imagination, music, movement, role play, making, and creative confidence.',
-      bg: 'bg-[#24493f] text-white',
-      descClass: 'text-white/80',
-      eyebrowClass: 'text-[#f0a27e]',
-    },
-  ];
-
   const dailySchedule = [
     {
-      time: '7:30 - 8:30',
-      activity: 'Breakfast Club & Free Play',
-      description: 'Quiet activities and breakfast for early arrivals.',
-    },
-    {
-      time: '8:30 - 9:00',
-      activity: 'Welcome & Circle Time',
-      description: 'Greetings, songs, and setting up the day together.',
-    },
-    {
-      time: '9:00 - 10:30',
-      activity: 'Learning Activities',
-      description: 'Play-based sessions linked to the EYFS curriculum.',
-    },
-    {
-      time: '10:30 - 11:00',
-      activity: 'Snack Time',
-      description: 'Healthy snacks and social time.',
-    },
-    {
-      time: '11:00 - 12:00',
-      activity: 'Outdoor Play',
-      description: 'Garden exploration and physical activity.',
-    },
-    {
-      time: '12:00 - 13:00',
-      activity: 'Lunch Time',
-      description: 'A nutritious meal enjoyed together.',
-    },
-    {
-      time: '13:00 - 14:30',
-      activity: 'Rest / Quiet Time',
+      time: '7:30 AM - 9:00 AM',
+      activity: 'Arrival and free play',
       description:
-        'Naps for younger children and calm activities for older ones.',
+        'Children arrive, settle in, and choose from toys, books, or quiet activities.',
     },
     {
-      time: '14:30 - 15:00',
-      activity: 'Snack Time',
-      description: 'Afternoon refreshment and reset.',
+      time: '9:00 AM - 9:30 AM',
+      activity: 'Breakfast / snack time',
+      description:
+        'Healthy snacks and drinks, with time for social interaction and a calm start to the day.',
     },
     {
-      time: '15:00 - 16:30',
-      activity: 'Afternoon Activities',
-      description: 'Creative play, stories, and free choice.',
+      time: '9:30 AM - 10:30 AM',
+      activity: 'Learning and activity time',
+      description:
+        'Planned activities such as arts and crafts, puzzles, early learning, and sensory play.',
     },
     {
-      time: '16:30 - 18:00',
-      activity: 'Tea Club & Home Time',
-      description: 'Light tea and calm activities until pickup.',
+      time: '10:30 AM - 11:30 AM',
+      activity: 'Outdoor play / walk / garden time',
+      description:
+        'Outdoor play, park visits, or nature walks for fresh air and exercise.',
+    },
+    {
+      time: '11:30 AM - 12:00 PM',
+      activity: 'Story time and wind down',
+      description:
+        'Stories, songs, and calming activities to help children settle before lunch.',
+    },
+    {
+      time: '12:00 PM - 12:30 PM',
+      activity: 'Lunch time',
+      description:
+        'Nutritious meals prepared with allergy, special, and religious needs taken into account.',
+    },
+    {
+      time: '12:30 PM - 2:00 PM',
+      activity: 'Nap / quiet time',
+      description:
+        'Younger children nap while older children enjoy quiet activities such as reading and drawing.',
+    },
+    {
+      time: '2:00 PM - 2:45 PM',
+      activity: 'Snack time',
+      description:
+        'A light snack and drinks to recharge for the afternoon.',
+    },
+    {
+      time: '2:45 PM - 3:30 PM',
+      activity: 'Free play / preschool pick up',
+      description:
+        'Free play and transitions for children being collected from preschool.',
+    },
+    {
+      time: '3:30 PM - 4:30 PM',
+      activity: 'Dinner time',
+      description:
+        'Home-made meals, with children’s dietary, allergy, special, and religious needs respected.',
+    },
+    {
+      time: '4:30 PM - 5:00 PM',
+      activity: 'Free play',
+      description:
+        'Calm and happy play before the end of the day.',
+    },
+    {
+      time: '6:00 PM',
+      activity: 'Home time',
+      description:
+        'A warm handover at the end of the day.',
+    },
+  ];
+
+  const routineBenefits = [
+    {
+      icon: Clock,
+      title: 'Routine and consistency',
+      description:
+        'A familiar daily flow helps children feel safe, settled, and secure.',
+    },
+    {
+      icon: Heart,
+      title: 'Individual care',
+      description:
+        'Children are supported according to their age, needs, interests, and personality.',
+    },
+    {
+      icon: BookOpen,
+      title: 'Play-based learning',
+      description:
+        'Learning happens naturally through stories, conversation, creative play, and everyday activities.',
+    },
+    {
+      icon: Trees,
+      title: 'Outdoor experiences',
+      description:
+        'Fresh air, walks, and active play are built into the week.',
+    },
+    {
+      icon: Utensils,
+      title: 'Healthy meals',
+      description:
+        'Meals and snacks are part of the routine and children’s individual needs are respected.',
+    },
+    {
+      icon: Moon,
+      title: 'Rest and quiet time',
+      description:
+        'Children have time to rest, nap, or enjoy calm activities during the day.',
     },
   ];
 
@@ -252,13 +253,14 @@ const Programs = () => {
         <div className="absolute left-0 top-0 -z-10 h-96 w-full bg-nursery-mint/30" />
         <div className="section-container">
           <div className="mx-auto max-w-3xl text-center scroll-animate opacity-0">
-            <span className="label-uppercase mb-4 block">Our Programs</span>
+            <span className="label-uppercase mb-4 block">Daily Routine</span>
             <h1 className="mb-6 text-4xl font-bold leading-tight text-nursery-slate md:text-5xl lg:text-6xl">
-              Learning through <span className="text-nursery-tangerine">play</span> at every age
+              A calm, caring day filled with{' '}
+              <span className="text-nursery-tangerine">play and routine</span>
             </h1>
             <p className="text-lg text-nursery-slate-muted">
-              Beautifully structured days, warm relationships, and carefully planned
-              experiences that help children feel secure, curious, and ready to grow.
+              At {siteName}, each day is built around a gentle routine that includes
+              play, learning, meals, outdoor time, rest, and warm care throughout the day.
             </p>
           </div>
         </div>
@@ -267,27 +269,31 @@ const Programs = () => {
       <section className="py-20">
         <div className="section-container">
           <div className="grid gap-8 lg:grid-cols-3">
-            {programs.map((program, index) => (
+            {ageGroups.map((group, index) => (
               <div
-                key={program.title}
-                className="scroll-animate opacity-0 overflow-hidden rounded-[2.2rem] bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-soft-lg"
+                key={group.title}
+                className="scroll-animate overflow-hidden rounded-[2.2rem] bg-white opacity-0 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-soft-lg"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className={`bg-gradient-to-br ${program.tint} p-7`}>
-                  <EmojiIcon emoji={program.emoji} className="mb-5 drift-soft" />
-                  <p className={`mb-2 text-sm font-semibold uppercase tracking-[0.16em] ${program.accent}`}>
-                    {program.age}
+                <div className={`bg-gradient-to-br ${group.tint} p-7`}>
+                  <EmojiIcon emoji={group.emoji} className="mb-5 drift-soft" />
+                  <p className={`mb-2 text-sm font-semibold uppercase tracking-[0.16em] ${group.accent}`}>
+                    {group.age}
                   </p>
-                  <h3 className="text-3xl font-bold text-nursery-slate">{program.title}</h3>
+                  <h3 className="text-2xl font-bold text-nursery-slate sm:text-3xl">
+                    {group.title}
+                  </h3>
                 </div>
+
                 <div className="p-7">
                   <p className="mb-6 leading-relaxed text-nursery-slate-muted">
-                    {program.description}
+                    {group.description}
                   </p>
+
                   <ul className="space-y-3">
-                    {program.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-3">
-                        <CheckCircle2 className="h-5 w-5 shrink-0 text-nursery-tangerine" />
+                    {group.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-nursery-tangerine" />
                         <span className="text-sm text-nursery-slate">{feature}</span>
                       </li>
                     ))}
@@ -302,21 +308,22 @@ const Programs = () => {
       <section className="bg-nursery-mint/30 py-20">
         <div className="section-container">
           <div className="mx-auto mb-16 max-w-2xl text-center scroll-animate opacity-0">
-            <span className="label-uppercase mb-4 block">Activities</span>
+            <span className="label-uppercase mb-4 block">What the day includes</span>
             <h2 className="mb-6 text-3xl font-bold text-nursery-slate md:text-4xl">
-              A day full of <span className="text-nursery-tangerine">discovery</span>
+              Everyday moments that support{' '}
+              <span className="text-nursery-tangerine">happy little learners</span>
             </h2>
             <p className="text-nursery-slate-muted">
-              Rich daily experiences designed to support confidence, creativity,
-              language, movement, and joyful learning.
+              Children enjoy a balanced mix of play, care, meals, stories, outdoor time,
+              rest, and activities tailored to their age and interests.
             </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {activities.map((activity, index) => (
+            {dayHighlights.map((activity, index) => (
               <div
                 key={activity.title}
-                className="soft-rise scroll-animate opacity-0 flex items-start gap-4 rounded-[2rem] bg-white p-6 shadow-soft"
+                className="soft-rise scroll-animate flex items-start gap-4 rounded-[2rem] bg-white p-6 opacity-0 shadow-soft"
                 style={{ animationDelay: `${index * 60}ms` }}
               >
                 <EmojiIcon
@@ -342,46 +349,48 @@ const Programs = () => {
         <div className="section-container">
           <div className="grid items-start gap-12 lg:grid-cols-2">
             <div className="scroll-animate opacity-0">
-              <span className="label-uppercase mb-4 block">Daily Routine</span>
+              <span className="label-uppercase mb-4 block">A Typical Day</span>
               <h2 className="mb-6 text-3xl font-bold text-nursery-slate md:text-4xl">
-                A typical day at <span className="text-nursery-tangerine">{siteShortName}</span>
+                The daily rhythm at{' '}
+                <span className="text-nursery-tangerine">{siteName}</span>
               </h2>
               <p className="mb-8 text-nursery-slate-muted">
-                Our rhythm gives children the comfort of routine while still making
-                room for play, rest, and spontaneous moments of wonder.
+                Daily routine helps create structure, consistency, and a sense of security
+                for children. It includes meals, playtime, naps, learning activities,
+                outdoor time, and calm transitions through the day.
               </p>
+
               <div className="rounded-[2rem] bg-white p-6 shadow-soft">
                 <div className="mb-3 flex items-center gap-3">
                   <Clock className="h-5 w-5 text-nursery-tangerine" />
                   <span className="font-medium text-nursery-slate">
-                    Flexible sessions for families
+                    Opening hours
                   </span>
                 </div>
-                <p className="text-sm text-nursery-slate-muted">
-                  We offer full-day, morning, and afternoon sessions to suit different
-                  family routines, with a warm handover at both ends of the day.
-                </p>
+                <p className="text-sm text-nursery-slate-muted">{openingHours}</p>
               </div>
             </div>
 
             <div className="space-y-4 scroll-animate opacity-0">
               {dailySchedule.map((item) => (
                 <div
-                  key={item.time}
-                  className="flex items-start gap-4 rounded-[1.8rem] bg-white p-4 shadow-soft"
+                  key={`${item.time}-${item.activity}`}
+                  className="rounded-[1.8rem] bg-white p-4 shadow-soft"
                 >
-                  <div className="w-20 shrink-0">
-                    <span className="text-xs font-semibold uppercase tracking-[0.08em] text-nursery-tangerine">
-                      {item.time}
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="mb-1 text-sm font-bold text-nursery-slate">
-                      {item.activity}
-                    </h4>
-                    <p className="text-xs leading-relaxed text-nursery-slate-muted">
-                      {item.description}
-                    </p>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
+                    <div className="sm:w-32 sm:shrink-0">
+                      <span className="text-xs font-semibold uppercase tracking-[0.08em] text-nursery-tangerine">
+                        {item.time}
+                      </span>
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="mb-1 text-sm font-bold text-nursery-slate sm:text-base">
+                        {item.activity}
+                      </h4>
+                      <p className="text-xs leading-relaxed text-nursery-slate-muted sm:text-sm">
+                        {item.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -399,9 +408,9 @@ const Programs = () => {
                 alt={programsBanner.alt}
                 tilt="left"
                 badge={{
-                  emoji: '💬',
-                  eyebrow: 'Focus',
-                  text: 'Learning through joyful play',
+                  emoji: '💛',
+                  eyebrow: 'Daily routine',
+                  text: 'Play, meals, rest, and outdoor time',
                   position: 'bottom-right',
                 }}
                 imageClassName="h-[420px] sm:h-[540px]"
@@ -409,57 +418,33 @@ const Programs = () => {
             </div>
 
             <div className="order-1 scroll-animate opacity-0 lg:order-2">
-              <span className="label-uppercase mb-4 block">EYFS Framework</span>
+              <span className="label-uppercase mb-4 block">Why routine matters</span>
               <h2 className="mb-6 text-3xl font-bold text-nursery-slate md:text-4xl">
-                Learning at every <span className="text-nursery-tangerine">stage</span>
+                A day that feels{' '}
+                <span className="text-nursery-tangerine">safe, familiar, and happy</span>
               </h2>
               <p className="mb-8 text-nursery-slate-muted">
-                We follow the EYFS framework and turn it into warm, practical
-                experiences that help every child grow socially, emotionally,
-                physically, and academically.
+                A well-balanced daily routine helps children settle more easily, feel
+                secure, and enjoy the confidence that comes from knowing what their day looks like.
               </p>
 
-              <div className="space-y-5">
-                <div className="grid gap-5 md:grid-cols-2">
-                  {eyfsAreas.slice(0, 3).map((area) => (
-                    <div key={area.title} className={`${area.bg} rounded-[2.4rem] p-8 shadow-soft`}>
-                      <EmojiIcon emoji={area.emoji} className="mb-6" />
-                      <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-nursery-slate-muted">
-                        {area.eyebrow}
-                      </p>
-                      <h3 className="mb-3 text-2xl font-bold text-nursery-slate">
-                        {area.title}
-                      </h3>
-                      <p className="leading-relaxed text-nursery-slate-muted">
-                        {area.desc}
-                      </p>
+              <div className="grid gap-5 sm:grid-cols-2">
+                {routineBenefits.map((item, index) => (
+                  <div
+                    key={index}
+                    className="rounded-[1.8rem] bg-white p-5 shadow-soft"
+                  >
+                    <div className="icon-circle mb-4">
+                      <item.icon className="h-5 w-5" />
                     </div>
-                  ))}
-                </div>
-
-                <div className="rounded-[2.8rem] bg-[#143f3a] p-8 text-white shadow-soft-lg">
-                  <p className="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-[#f0a27e]">
-                    Plus the 4 specific areas
-                  </p>
-                  <h3 className="mb-8 text-3xl font-bold">Igniting specific skills</h3>
-
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    {eyfsAreas.slice(3).map((area) => (
-                      <div
-                        key={area.title}
-                        className="rounded-[1.8rem] border border-white/10 bg-white/10 p-5 backdrop-blur-sm"
-                      >
-                        <EmojiIcon
-                          emoji={area.emoji}
-                          sizeClassName="h-12 w-12"
-                          className="mb-4"
-                        />
-                        <h4 className="mb-2 text-2xl font-bold text-white">{area.title}</h4>
-                        <p className="text-white/78">{area.desc}</p>
-                      </div>
-                    ))}
+                    <h4 className="mb-2 text-lg font-bold text-nursery-slate">
+                      {item.title}
+                    </h4>
+                    <p className="text-sm leading-relaxed text-nursery-slate-muted">
+                      {item.description}
+                    </p>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -468,23 +453,23 @@ const Programs = () => {
 
       <section className="py-20">
         <div className="section-container">
-          <div className="rounded-[2.4rem] bg-nursery-tangerine p-12 text-center scroll-animate opacity-0">
+          <div className="scroll-animate rounded-[2.4rem] bg-nursery-tangerine p-8 text-center opacity-0 sm:p-12">
             <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
-              Ready to join our family?
+              Looking for childcare that feels warm and personal?
             </h2>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-white/90">
-              Contact us to arrange a visit and see our programs in action. We would
-              love to meet you and your little one.
+              Get in touch to arrange a visit, ask questions, and see whether this
+              daily routine and setting are the right fit for your child.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 to="/contact"
                 className="inline-block rounded-full bg-white px-8 py-4 font-bold text-nursery-tangerine transition-colors hover:bg-nursery-cream"
               >
-                Book a Tour
+                Arrange a Visit
               </Link>
               <a
-                href={SITE.phoneHref}
+                href={phoneHref}
                 className="inline-block rounded-full border-2 border-white bg-nursery-tangerine px-8 py-4 font-bold text-white transition-colors hover:bg-white hover:text-nursery-tangerine"
               >
                 Call Us
