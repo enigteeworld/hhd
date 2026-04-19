@@ -5,9 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/lib/supabase';
+import { SITE } from '@/lib/site';
+import useCmsContent from '@/hooks/useCmsContent';
 
 const Admin = () => {
   const navigate = useNavigate();
+  const { getSetting, getImage } = useCmsContent();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -15,6 +19,13 @@ const Admin = () => {
     email: '',
     password: '',
   });
+
+  const siteName = getSetting('site_name', SITE.name);
+  const adminLogo = getImage(
+    'site_logo',
+    '/logo-cropped.png',
+    `${siteName} logo`,
+  );
 
   useEffect(() => {
     const checkSession = async () => {
@@ -48,21 +59,21 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-nursery-cream flex items-center justify-center p-4">
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+    <div className="flex min-h-screen items-center justify-center bg-nursery-cream p-4">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-nursery-tangerine/10" />
-        <div className="absolute bottom-0 right-0 h-96 w-96 translate-x-1/2 translate-y-1/2 rounded-full bg-nursery-mint/30" />
+        <div className="absolute right-0 bottom-0 h-96 w-96 translate-x-1/2 translate-y-1/2 rounded-full bg-nursery-mint/30" />
       </div>
 
       <div className="relative w-full max-w-md">
         <div className="mb-8 text-center">
           <img
-            src="/logo-cropped.png"
-            alt="Happy Hearts Daycare"
-            className="mx-auto mb-4 h-20"
+            src={adminLogo.src}
+            alt={adminLogo.alt}
+            className="mx-auto mb-4 h-20 w-auto object-contain"
           />
           <h1 className="text-2xl font-bold text-nursery-slate">Admin Portal</h1>
-          <p className="text-sm text-nursery-slate-muted">Happy Hearts Daycare</p>
+          <p className="text-sm text-nursery-slate-muted">{siteName}</p>
         </div>
 
         <div className="rounded-[2rem] border border-white/60 bg-white/95 p-8 shadow-soft-lg backdrop-blur">
@@ -83,7 +94,7 @@ const Admin = () => {
                 Email Address
               </Label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-nursery-slate-muted" />
+                <Mail className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-nursery-slate-muted" />
                 <Input
                   id="email"
                   type="email"
@@ -104,7 +115,7 @@ const Admin = () => {
                 Password
               </Label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-nursery-slate-muted" />
+                <Lock className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-nursery-slate-muted" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -120,7 +131,7 @@ const Admin = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-nursery-slate-muted transition-colors hover:text-nursery-slate"
+                  className="absolute top-1/2 right-4 -translate-y-1/2 text-nursery-slate-muted transition-colors hover:text-nursery-slate"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -135,7 +146,7 @@ const Admin = () => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full border-0 btn-primary flex items-center justify-center"
+              className="flex w-full items-center justify-center border-0 btn-primary"
             >
               {isLoading ? (
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
