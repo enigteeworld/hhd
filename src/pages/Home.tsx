@@ -16,6 +16,8 @@ import {
   UserRound,
   MessageCircleHeart,
   ShieldCheck,
+  Award,
+  CheckCircle2,
 } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -184,7 +186,15 @@ const Home = () => {
     'I am a dedicated and nurturing childminder with a genuine passion for supporting children’s growth, development, and happiness. With a caring and patient approach, I create a safe, welcoming environment where children feel valued, confident, and free to explore the world around them.',
     'I believe every child is unique, and I take pride in tailoring activities to suit each child’s interests and developmental stage. From creative play and story telling to outdoor adventures and early learning activities, I aim to make each day engaging, fun, and enriching.',
     'Building strong relationships with both children and their families is at the heart of what I do. I maintain open, honest communication with parents to help ensure consistency, trust, and peace of mind.',
-    'Having lots of experience in adult and elderly care, I have now dedicated myself to caring for children. Over time I have completed mandatory training and worked with people from different cultures and ethnic backgrounds, helping me build a respectful and inclusive approach to care.',
+    'Alongside my hands-on care experience, I have completed key childcare and safeguarding training that supports the safe, thoughtful, and professional care I provide every day.',
+  ];
+
+  const qualifications = [
+    'Childminding course - Stockport Metropolitan Borough Council',
+    'Designated Safeguarding Lead (DSL)',
+    'Paediatric first aid training',
+    'Pre-School Years course',
+    'Incredible Years: Preschool Parent Group',
   ];
 
   return (
@@ -483,11 +493,14 @@ const Home = () => {
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div className="scroll-animate opacity-0">
               <div className="overflow-hidden rounded-[2rem] bg-white p-4 shadow-soft sm:p-5">
-                <img
-                  src={founderImage.src}
-                  alt={founderImage.alt}
-                  className="h-[300px] w-full rounded-[1.5rem] object-cover sm:h-[380px] lg:h-[460px]"
-                />
+                
+                 <div className="overflow-hidden rounded-[1.5rem]">
+  <img
+    src={founderImage.src}
+    alt={founderImage.alt}
+    className="h-[700px] w-full rounded-[1.5rem] object-cover object-center"
+  />
+</div>
 
                 <div className="mt-5 rounded-[1.5rem] bg-nursery-cream p-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-nursery-tangerine">
@@ -511,6 +524,26 @@ const Home = () => {
                       {paragraph}
                     </p>
                   ))}
+                </div>
+
+                <div className="mt-8 rounded-[1.75rem] bg-nursery-cream p-5 sm:p-6">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="icon-circle">
+                      <Award className="h-5 w-5" />
+                    </div>
+                    <h3 className="text-lg font-bold text-nursery-slate sm:text-xl">
+                      Training and qualifications
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {qualifications.map((qualification, index) => (
+                      <div key={index} className="flex items-start gap-3 rounded-2xl bg-white p-4">
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-nursery-tangerine" />
+                        <p className="text-sm leading-6 text-nursery-slate">{qualification}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
